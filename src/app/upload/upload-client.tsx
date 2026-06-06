@@ -82,8 +82,15 @@ export function UploadFormClient() {
       clearInterval(progressInterval);
 
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Upload failed");
+        let errorMessage = "Upload failed";
+        try {
+          const data = await res.json();
+          errorMessage = data.error || errorMessage;
+        } catch {
+          const text = await res.text();
+          errorMessage = text || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await res.json();
