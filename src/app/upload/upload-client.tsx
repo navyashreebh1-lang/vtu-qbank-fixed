@@ -71,31 +71,54 @@ export function UploadFormClient() {
     }, 200);
 
     try {
+      // 1. Get secure signature from our server
+      const safeName = f.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+      const public_id = `vtu_${Date.now()}_${safeName}`.replace(/\.(pdf|jpg|jpeg|png|webp)$/i, "");
+      
+      const sigRes = await fetch("/api/upload/signature", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ public_id }),
+      });
+
+      if (!sigRes.ok) {
+        throw new Error("Failed to get upload signature");
+      }
+
+      const sigData = await sigRes.json();
+      
+      if (!sigData.success) {
+        throw new Error(sigData.error || "Failed to generate signature");
+      }
+
+      // 2. Upload directly to Cloudinary bypassing Vercel
       const uploadData = new FormData();
       uploadData.append("file", f);
+      uploadData.append("api_key", sigData.apiKey);
+      uploadData.append("timestamp", sigData.timestamp.toString());
+      uploadData.append("signature", sigData.signature);
+      uploadData.append("folder", "vtu-question-bank");
+      uploadData.append("public_id", public_id);
+      uploadData.append("tags", "vtu,question-paper");
 
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: uploadData,
-      });
+      const cloudinaryRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${sigData.cloudName}/raw/upload`,
+        {
+          method: "POST",
+          body: uploadData,
+        }
+      );
 
       clearInterval(progressInterval);
 
-      if (!res.ok) {
-        let errorMessage = "Upload failed";
-        const text = await res.text();
-        try {
-          const data = JSON.parse(text);
-          errorMessage = data.error || errorMessage;
-        } catch {
-          errorMessage = text || errorMessage;
-        }
-        throw new Error(errorMessage);
+      if (!cloudinaryRes.ok) {
+        const text = await cloudinaryRes.text();
+        throw new Error("Cloudinary upload failed: " + text);
       }
 
-      const data = await res.json();
-      setPdfUrl(data.data.pdfUrl);
-      setCloudinaryId(data.data.cloudinaryId);
+      const cloudinaryData = await cloudinaryRes.json();
+      setPdfUrl(cloudinaryData.secure_url);
+      setCloudinaryId(cloudinaryData.public_id);
       setProgress(100);
       setFormState("idle");
     } catch (err) {
