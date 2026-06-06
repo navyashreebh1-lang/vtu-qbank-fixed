@@ -226,13 +226,13 @@ export function UploadFormClient() {
         </Label>
 
         {file && pdfUrl ? (
-          <div className="flex items-center gap-4 p-4 rounded-xl border border-green-500/20 bg-green-500/5">
+          <div className="flex items-center gap-4 p-4 rounded-xl border border-green-500/20 bg-green-500/5 min-w-0">
             <div className="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
               <FileText className="h-5 w-5 text-green-500" />
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 overflow-hidden">
               <p className="text-sm font-medium truncate">{file.name}</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground truncate">
                 {(file.size / 1024 / 1024).toFixed(2)} MB • Uploaded
               </p>
             </div>
@@ -249,7 +249,7 @@ export function UploadFormClient() {
         ) : (
           <div
             {...getRootProps()}
-            className={`relative border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all duration-200 ${
+            className={`relative border-2 border-dashed rounded-xl p-6 sm:p-12 text-center cursor-pointer transition-all duration-200 ${
               isDragActive
                 ? "border-primary bg-primary/5"
                 : "border-border/50 hover:border-primary/50 hover:bg-primary/[0.02]"
@@ -289,7 +289,7 @@ export function UploadFormClient() {
           Paper Details
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label className="text-sm mb-1.5 block">
               Paper Name <span className="text-destructive">*</span>

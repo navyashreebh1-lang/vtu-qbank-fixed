@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Download, Eye, ZoomIn, ZoomOut, Maximize2, ArrowLeft, Flag, Calendar, Tag, BookOpen, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,6 +29,22 @@ export function PaperDetailClient({ paper }: PaperDetailClientProps) {
   const [reportSent, setReportSent] = useState(false);
   const [numPages, setNumPages] = useState<number>();
   const [pdfError, setPdfError] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState<number>();
+
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setContainerWidth(entry.contentRect.width - 32); // Account for padding
+      }
+    });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
@@ -158,7 +174,11 @@ export function PaperDetailClient({ paper }: PaperDetailClientProps) {
               </div>
 
               {/* PDF embed */}
-              <div className="relative bg-muted/30 overflow-auto flex flex-col items-center py-8" style={{ height: "75vh" }}>
+              <div 
+                ref={containerRef}
+                className="relative bg-muted/30 overflow-auto flex flex-col items-center py-8" 
+                style={{ height: "75vh" }}
+              >
                 {pdfError ? (
                   <div className="flex flex-col items-center justify-center h-full text-center px-4">
                     <FileText className="h-16 w-16 text-destructive/50 mx-auto mb-4" />
@@ -183,12 +203,14 @@ export function PaperDetailClient({ paper }: PaperDetailClientProps) {
                     className="flex flex-col items-center gap-6"
                   >
                     {Array.from(new Array(numPages || 0), (el, index) => (
-                      <div key={`page_${index + 1}`} className="shadow-lg border border-border/20 bg-white">
+                      <div key={`page_${index + 1}`} className="shadow-lg border border-border/20 bg-white max-w-full">
                          <Page
                            pageNumber={index + 1}
+                           width={containerWidth ? Math.min(containerWidth, 800) : undefined}
                            scale={zoom / 100}
                            renderTextLayer={true}
                            renderAnnotationLayer={true}
+                           className="max-w-full"
                          />
                       </div>
                     ))}

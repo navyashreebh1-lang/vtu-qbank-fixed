@@ -13,7 +13,7 @@ interface PaperGridProps {
 export function PaperGrid({ papers, isLoading }: PaperGridProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="rounded-xl border border-border/50 p-5 space-y-4">
             <div className="flex gap-2">
@@ -55,7 +55,7 @@ export function PaperGrid({ papers, isLoading }: PaperGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
       {papers.map((paper, index) => (
         <PaperCard key={paper.id} paper={paper} index={index} />
       ))}

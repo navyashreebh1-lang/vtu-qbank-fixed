@@ -173,8 +173,8 @@ export function PaperFilters({ subjects = [] }: { subjects?: string[] }) {
   return (
     <div className="space-y-4">
       {/* Search + Sort + Mobile Filter Toggle */}
-      <div className="flex gap-3">
-        <div className="relative flex-1">
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1 w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search papers... (e.g., '4th sem ADA paper')"
@@ -192,37 +192,38 @@ export function PaperFilters({ subjects = [] }: { subjects?: string[] }) {
           )}
         </div>
 
-        <Select
-          value={filters.sort}
-          onValueChange={(v) => handleFilterChange("sort", v || "newest")}
-        >
-          <SelectTrigger className="w-[160px] h-11 rounded-xl">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="newest">Newest First</SelectItem>
-            <SelectItem value="oldest">Oldest First</SelectItem>
-            <SelectItem value="most_downloaded">Most Downloaded</SelectItem>
-            <SelectItem value="most_viewed">Most Viewed</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex gap-3 w-full sm:w-auto">
+          <Select
+            value={filters.sort}
+            onValueChange={(v) => handleFilterChange("sort", v || "newest")}
+          >
+            <SelectTrigger className="flex-1 sm:w-[160px] h-11 rounded-xl">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="newest">Newest First</SelectItem>
+              <SelectItem value="oldest">Oldest First</SelectItem>
+              <SelectItem value="most_downloaded">Most Downloaded</SelectItem>
+              <SelectItem value="most_viewed">Most Viewed</SelectItem>
+            </SelectContent>
+          </Select>
 
-        {/* Mobile filter button */}
-        <Sheet>
-          <SheetTrigger render={
-            <Button
-              variant="outline"
-              className="lg:hidden h-11 rounded-xl gap-2"
-            >
-              <SlidersHorizontal className="h-4 w-4" />
-              {activeFilterCount > 0 && (
-                <Badge className="h-5 w-5 p-0 text-xs flex items-center justify-center rounded-full">
-                  {activeFilterCount}
-                </Badge>
-              )}
-            </Button>
-          } />
-          <SheetContent>
+          {/* Mobile filter button */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="outline"
+                className="lg:hidden h-11 rounded-xl gap-2 shrink-0"
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+                {activeFilterCount > 0 && (
+                  <Badge className="h-5 w-5 p-0 text-xs flex items-center justify-center rounded-full">
+                    {activeFilterCount}
+                  </Badge>
+                )}
+              </Button>
+            </SheetTrigger>
+            <SheetContent>
             <SheetHeader>
               <SheetTitle>Filters</SheetTitle>
             </SheetHeader>
@@ -231,6 +232,7 @@ export function PaperFilters({ subjects = [] }: { subjects?: string[] }) {
             </div>
           </SheetContent>
         </Sheet>
+        </div>
       </div>
 
       {/* Active filter badges */}
