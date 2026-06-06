@@ -210,19 +210,21 @@ export function PaperFilters({ subjects = [] }: { subjects?: string[] }) {
 
           {/* Mobile filter button */}
           <Sheet>
-            <SheetTrigger asChild>
-              <Button
-                variant="outline"
-                className="lg:hidden h-11 rounded-xl gap-2 shrink-0"
-              >
-                <SlidersHorizontal className="h-4 w-4" />
-                {activeFilterCount > 0 && (
-                  <Badge className="h-5 w-5 p-0 text-xs flex items-center justify-center rounded-full">
-                    {activeFilterCount}
-                  </Badge>
-                )}
-              </Button>
-            </SheetTrigger>
+            <SheetTrigger
+              render={
+                <Button
+                  variant="outline"
+                  className="lg:hidden h-11 rounded-xl gap-2 shrink-0"
+                >
+                  <SlidersHorizontal className="h-4 w-4" />
+                  {activeFilterCount > 0 && (
+                    <Badge className="h-5 w-5 p-0 text-xs flex items-center justify-center rounded-full">
+                      {activeFilterCount}
+                    </Badge>
+                  )}
+                </Button>
+              }
+            />
             <SheetContent>
             <SheetHeader>
               <SheetTitle>Filters</SheetTitle>

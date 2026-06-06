@@ -212,23 +212,25 @@ export default function DashboardPage() {
                   </span>
                   
                   <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 shrink-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setDeleteError("");
-                        }}
-                      >
-                        {deletingId === paper.id ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          <Trash2 className="h-4 w-4" />
-                        )}
-                      </Button>
-                    </AlertDialogTrigger>
+                    <AlertDialogTrigger
+                      render={
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 shrink-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setDeleteError("");
+                          }}
+                        >
+                          {deletingId === paper.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-4 w-4" />
+                          )}
+                        </Button>
+                      }
+                    />
                     <AlertDialogContent onClick={(e) => e.stopPropagation()}>
                       <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
