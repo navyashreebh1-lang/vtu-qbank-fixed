@@ -68,7 +68,7 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen">
       <Navbar />
-      <div className="flex pt-16">
+      <div className="flex pt-0 md:pt-16">
         {/* Desktop Sidebar */}
         <aside className="hidden lg:block w-64 border-r border-border/50 min-h-[calc(100vh-4rem)] bg-card/30 backdrop-blur-sm">
           <div className="sticky top-16">
